@@ -236,6 +236,11 @@ class APIClient {
                 return;
             }
             default: {
+                // Cloudflare Zero Trust が返すエラーの場合、リダイレクトする
+                if (error_response.headers?.['Location']?.includes('cloudflareaccess.com')) {
+                    location.href = error_response.headers['Location'];
+                    return;
+                }
                 if (Array.isArray(error_response.data.detail)) {
                     // バリデーションエラーが発生した場合
                     // error_response.data.detail が配列の場合は、バリデーションエラーが発生したとみなす
